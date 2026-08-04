@@ -82,7 +82,7 @@ export function FormularioEnvio({
         >
           <input
             type="text" value={disciplina} onChange={e => setDisciplina(e.target.value)}
-            placeholder="Ex: Programação Web" disabled={!roundAtiva}
+            placeholder="Ex: Programação ..." disabled={!roundAtiva}
             className={inputCls}
           />
         </Campo>
