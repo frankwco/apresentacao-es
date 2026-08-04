@@ -12,11 +12,13 @@
 // ── Limites ───────────────────────────────────────────────────────────────────
 
 export const LIMITES = {
-  NOME_MIN:      1,
-  NOME_MAX:    100,
-  ESCOLA_MAX:  100,
-  MENSAGEM_MIN:  1,
-  MENSAGEM_MAX: 500,
+  NOME_MIN:        1,
+  NOME_MAX:      100,
+  ESCOLA_MAX:    100,
+  MENSAGEM_MIN:    1,
+  MENSAGEM_MAX:  500,
+  DISCIPLINA_MIN:  1,
+  DISCIPLINA_MAX: 100,
 } as const
 
 // ── Normalização ──────────────────────────────────────────────────────────────
@@ -53,6 +55,18 @@ export function validarNome(nome: string): string | null {
 export function validarEscola(escola: string): string | null {
   const e = normalizarTexto(escola)
   if (e.length > LIMITES.ESCOLA_MAX) return `Escola muito longa — máximo ${LIMITES.ESCOLA_MAX} caracteres.`
+  return null
+}
+
+/**
+ * Valida o campo de disciplina (obrigatório para enviar). Não exige que o
+ * nome bata com uma disciplina real da grade — isso só define se o bônus é
+ * aplicado, e é conferido no servidor (ver src/lib/disciplinas.ts).
+ */
+export function validarDisciplina(disciplina: string): string | null {
+  const d = normalizarTexto(disciplina)
+  if (d.length < LIMITES.DISCIPLINA_MIN) return 'Conte qual disciplina do curso mais chamou sua atenção.'
+  if (d.length > LIMITES.DISCIPLINA_MAX) return `Nome de disciplina muito longo — máximo ${LIMITES.DISCIPLINA_MAX} caracteres.`
   return null
 }
 

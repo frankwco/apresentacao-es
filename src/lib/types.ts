@@ -90,6 +90,7 @@ export interface Database {
           mensagem: string
           round_title: string | null
           round_prompt: string | null
+          disciplina: string | null
           nota: number | null
           feedback: string | null
           criterios: Json | null
@@ -104,6 +105,7 @@ export interface Database {
           mensagem: string
           round_title?: string | null
           round_prompt?: string | null
+          disciplina?: string | null
           nota?: number | null
           feedback?: string | null
           criterios?: Json | null
@@ -118,6 +120,7 @@ export interface Database {
           mensagem?: string
           round_title?: string | null
           round_prompt?: string | null
+          disciplina?: string | null
           nota?: number | null
           feedback?: string | null
           criterios?: Json | null
@@ -208,8 +211,10 @@ export interface Criterios {
   software_relation: number
   impact:            number
   viability:         number
-  score:             number  // authoritative computed total
+  score:             number  // authoritative computed total (antes do bônus de disciplina)
   flagged:           boolean // true if content was flagged as inappropriate
+  disciplina_valida: boolean // true se `disciplina` bateu com uma disciplina real da grade
+  disciplina_bonus:  number  // pontos de bônus somados à nota (0 se disciplina_valida for false)
 }
 
 /**

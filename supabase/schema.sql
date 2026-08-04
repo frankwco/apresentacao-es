@@ -495,3 +495,12 @@ END $$;
 
 -- Atualiza a view para incluir o filtro de hidden (re-execute sempre que alterar)
 -- CREATE OR REPLACE VIEW ranking_view AS ... (já definida acima, re-execute o bloco)
+
+-- Disciplina da grade que o participante diz ter mais chamado atenção — usado
+-- para dar um bônus de pontos na nota quando o nome bate com uma disciplina
+-- real do curso (ver src/lib/disciplinas.ts). Incentiva o visitante a navegar
+-- pela página /curso antes de responder. Validado e aplicado no servidor
+-- (Edge Function evaluate-submission), não no cliente, para não ser burlável.
+ALTER TABLE submissions
+  ADD COLUMN IF NOT EXISTS disciplina text
+    CHECK (disciplina IS NULL OR char_length(trim(disciplina)) <= 100);

@@ -242,6 +242,7 @@ function ListaSubmissoes({ submissoes, onOcultar }: {
   submissoes: SubmissaoAdmin[]; onOcultar: (id: string, hidden: boolean) => void
 }) {
   const [mostrarOcultas, setMostrarOcultas] = useState(false)
+  const [expandidaId, setExpandidaId]       = useState<string | null>(null)
   const visiveis = mostrarOcultas ? submissoes : submissoes.filter(s => !s.hidden)
   if (submissoes.length === 0) return <p className="text-gray-400 text-sm">Nenhuma submissão ainda.</p>
   return (
@@ -253,25 +254,39 @@ function ListaSubmissoes({ submissoes, onOcultar }: {
         </button>
       </div>
       <ul className="space-y-2 max-h-96 overflow-y-auto pr-1">
-        {visiveis.map(s => (
-          <li key={s.id} className={`rounded-xl border p-3 space-y-1.5 ${s.hidden ? 'border-gray-200 bg-gray-50 opacity-50' : 'border-gray-200 bg-white'}`}>
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-gray-900 text-xs font-semibold">{s.player.nome}</p>
-                  {s.player.escola && <p className="text-gray-400 text-xs">{s.player.escola}</p>}
-                  {s.nota !== null && <span className="text-green-700 font-bold text-xs">{s.nota.toFixed(1)}/100</span>}
-                  {s.nota === null && <span className="text-blue-600 text-xs">avaliando...</span>}
+        {visiveis.map(s => {
+          const expandida = expandidaId === s.id
+          return (
+            <li key={s.id}
+              onClick={() => setExpandidaId(expandida ? null : s.id)}
+              title={expandida ? 'Clique para recolher' : 'Clique para ver a mensagem completa'}
+              className={`rounded-xl border p-3 space-y-1.5 cursor-pointer transition-colors ${
+                s.hidden ? 'border-gray-200 bg-gray-50 opacity-50' : 'border-gray-200 bg-white hover:bg-gray-50'
+              }`}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-gray-900 text-xs font-semibold">{s.player.nome}</p>
+                    {s.player.escola && <p className="text-gray-400 text-xs">{s.player.escola}</p>}
+                    {s.nota !== null && <span className="text-green-700 font-bold text-xs">{s.nota.toFixed(1)}/100</span>}
+                    {s.nota === null && <span className="text-blue-600 text-xs">avaliando...</span>}
+                  </div>
+                  {s.disciplina && (
+                    <p className="text-gray-400 text-[11px] mt-0.5">🎓 {s.disciplina}</p>
+                  )}
+                  <p className={`text-gray-500 text-xs mt-0.5 ${expandida ? 'whitespace-pre-wrap' : 'line-clamp-2'}`}>{s.mensagem}</p>
+                  {expandida && s.feedback && (
+                    <p className="text-gray-400 text-[11px] mt-1.5 italic border-t border-gray-100 pt-1.5">Feedback: {s.feedback}</p>
+                  )}
                 </div>
-                <p className="text-gray-500 text-xs mt-0.5 line-clamp-2">{s.mensagem}</p>
+                <button onClick={(e) => { e.stopPropagation(); onOcultar(s.id, !s.hidden) }} title={s.hidden ? 'Restaurar' : 'Ocultar'}
+                  className="flex-shrink-0 text-gray-400 hover:text-gray-700 transition-colors text-base">
+                  {s.hidden ? '👁️' : '🚫'}
+                </button>
               </div>
-              <button onClick={() => onOcultar(s.id, !s.hidden)} title={s.hidden ? 'Restaurar' : 'Ocultar'}
-                className="flex-shrink-0 text-gray-400 hover:text-gray-700 transition-colors text-base">
-                {s.hidden ? '👁️' : '🚫'}
-              </button>
-            </div>
-          </li>
-        ))}
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

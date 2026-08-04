@@ -22,6 +22,7 @@
  */
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { encontrarDisciplina } from '../../../src/lib/disciplinas.ts'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -58,6 +59,11 @@ const AI_ENDPOINT   = 'https://api.openai.com/v1/chat/completions'
 const AI_MODEL      = 'gpt-4o-mini'
 const MAX_TOKENS    = 300
 const TEMPERATURE   = 0.3
+
+// Bônus somado à nota quando `disciplina` bate com uma disciplina real da
+// grade curricular (ver src/lib/disciplinas.ts) — incentivo para o
+// participante navegar pela página /curso antes de responder.
+const DISCIPLINA_BONUS = 5
 
 // ── Prompt ────────────────────────────────────────────────────────────────────
 
@@ -295,6 +301,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       status,
       round_title,
       round_prompt,
+      disciplina,
       rounds ( id, title, prompt, status )
     `)
     .eq('id', submission_id)
@@ -414,10 +421,20 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // Clamp to [0, 100] as a safety net
   const totalClamped = Math.min(100, Math.max(0, computedTotal))
 
+  // ── Bônus de disciplina ────────────────────────────────────────────────
+  // Verificado e aplicado exclusivamente aqui (nunca confiando no cliente):
+  // `disciplina` é o texto livre que o participante digitou; comparamos
+  // contra a grade curricular oficial (case/acento-insensitive). Conteúdo
+  // sinalizado (flagged) nunca recebe bônus, mesmo que a disciplina bata.
+  const disciplinaMatch = encontrarDisciplina(submission.disciplina ?? '')
+  const disciplinaValida = disciplinaMatch !== null && !criteria.flagged
+  const disciplinaBonus  = disciplinaValida ? DISCIPLINA_BONUS : 0
+
   // nota é a pontuação bruta 0–100 com 1 casa decimal — granularidade extra
   // (5 critérios × 1 casa decimal) ajuda a evitar empates entre dezenas de
-  // participantes concorrendo pelo mesmo tema.
-  const nota = totalClamped
+  // participantes concorrendo pelo mesmo tema. O bônus de disciplina é
+  // somado por cima e o total final é reclampado em [0, 100].
+  const nota = Math.min(100, Math.max(0, totalClamped + disciplinaBonus))
 
   const criteriosPayload = {
     creativity:        criteria.creativity,
@@ -425,8 +442,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
     software_relation: criteria.software_relation,
     impact:            criteria.impact,
     viability:         criteria.viability,
-    score:             totalClamped,   // authoritative computed value
+    score:             totalClamped,   // authoritative computed value (antes do bônus)
     flagged:           criteria.flagged,
+    disciplina_valida: disciplinaValida,
+    disciplina_bonus:  disciplinaBonus,
   }
 
   // ── 10. Persist evaluation result ─────────────────────────────────────────

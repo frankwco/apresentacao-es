@@ -2,6 +2,8 @@
 // Software do IFPR – Campus Paranavaí, versão 2025 (Resolução n.º 37/2018).
 // Fonte: https://ifpr.edu.br/paranavai/wp-content/uploads/sites/21/2025/01/PPC-de-Engenharia-de-Software-2025.pdf
 
+import { grade } from '../../lib/disciplinas'
+
 const aprendizados = [
   { icon: '💻', titulo: 'Programação', desc: 'Da lógica básica à orientação a objetos, passando por estruturas de dados, desenvolvimento web e para dispositivos móveis.', disciplinas: 'Algoritmos e Estruturas de Dados I e II · Programação Orientada a Objetos · Programação Web · Dispositivos Móveis' },
   { icon: '🗄️', titulo: 'Banco de dados', desc: 'Aprende a modelar, guardar e consultar informações em sistemas que alimentam apps, sites e sistemas de empresas.', disciplinas: 'Banco de Dados I e II' },
@@ -21,66 +23,22 @@ const areas = [
 ]
 
 const projetos = [
-  { icon: '🏥', titulo: 'App de Saúde Mental',    desc: 'Sistema para estudantes registrarem humor e receberem recomendações personalizadas.',           tags: ['Mobile', 'IA', 'UX'] },
-  { icon: '🌿', titulo: 'Monitor Ambiental',       desc: 'Plataforma que coleta dados de sensores IoT para monitorar qualidade do ar e rios na região.', tags: ['IoT', 'Cloud', 'Dados'] },
-  { icon: '🎓', titulo: 'Plataforma de Ensino',    desc: 'Sistema de cursos online com videoaulas, exercícios adaptativos e certificados digitais.',      tags: ['Web', 'Banco de Dados', 'API'] },
-  { icon: '♿', titulo: 'App de Acessibilidade',   desc: 'Aplicativo que descreve imagens, lê texto em voz alta e traduz Libras em tempo real.',          tags: ['IA', 'Mobile', 'Acessibilidade'] },
   { icon: '🗳️', titulo: 'Sistema de Votação',      desc: 'Como este sistema aqui! Votação em tempo real com ranking automático e avaliação por IA.',      tags: ['Realtime', 'IA', 'Web'] },
-  { icon: '🚌', titulo: 'Mobilidade Urbana',       desc: 'App que informa rotas de ônibus em tempo real integrando dados públicos da cidade.',            tags: ['API', 'Mapas', 'Open Data'] },
+  { icon: '🎮', titulo: 'Desenvolvimento de Jogos', desc: 'Da lógica de jogo à interface: prototipe e construa jogos aplicando os mesmos fundamentos de programação e IA do curso.', tags: ['C / C++', 'Lógica de Jogos', 'Design'] },
+  // Projetos reais — desenvolvidos por alunos do curso no CodeLab IFPR (extensão universitária).
+  // Fonte: https://codelabifpr.com.br/projetos/cards
+  { icon: '🩺', titulo: 'Gestão de Fila de Especialidades', desc: 'Sistema real para a UBS de Nossa Senhora das Graças/PR — organiza encaminhamentos e consultas especializadas.', tags: ['Web', 'Saúde', 'Extensão'], real: true },
+  { icon: '♻️', titulo: 'Gestão da Coleta de Vidro',        desc: 'Sistema real para a Coopervaí — otimiza logística, rastreamento e relatórios da coleta de vidro para reciclagem.', tags: ['Web', 'Logística', 'Extensão'], real: true },
+  { icon: '🏠', titulo: 'Portal da Novaes Imóveis',         desc: 'Portal real que centraliza gestão de imóveis, contratos e locações para uma imobiliária de Paranavaí.', tags: ['Web', 'Negócios', 'Extensão'], real: true },
 ]
 
 const tecnologias = [
-  { categoria: 'Linguagens',     cor: 'blue',   itens: ['Python', 'JavaScript', 'TypeScript', 'Java', 'C / C++'] },
-  { categoria: 'Frontend',       cor: 'cyan',   itens: ['React', 'Vue.js', 'Angular', 'HTML & CSS', 'Tailwind'] },
-  { categoria: 'Backend',        cor: 'green',  itens: ['Node.js', 'Spring Boot', 'Django', 'FastAPI', 'GraphQL'] },
-  { categoria: 'Banco de Dados', cor: 'yellow', itens: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Supabase'] },
-  { categoria: 'DevOps & Cloud', cor: 'orange', itens: ['Git & GitHub', 'Docker', 'CI/CD', 'AWS / GCP', 'Linux'] },
-  { categoria: 'IA & Dados',     cor: 'purple', itens: ['TensorFlow', 'PyTorch', 'scikit-learn', 'LangChain', 'SQL Analytics'] },
-]
-
-// Matriz curricular oficial (Quadro 5 do PPC) — regime ANUAL, não semestral.
-// Carga horária (ch) em horas-aula (50min), conforme convenção do documento.
-const grade = [
-  { periodo: 1, label: '1º Ano', ch: 800, disciplinas: [
-    { nome: 'Ética, Cultura e Sociedade', ch: 80 },
-    { nome: 'Engenharia Econômica', ch: 80 },
-    { nome: 'Inglês Instrumental', ch: 80 },
-    { nome: 'Leitura e Produção de Gêneros Acadêmicos', ch: 80 },
-    { nome: 'Matemática Discreta e Lógica', ch: 80 },
-    { nome: 'Algoritmos e Estruturas de Dados I', ch: 160 },
-    { nome: 'Banco de Dados I', ch: 80 },
-    { nome: 'Engenharia de Software', ch: 80 },
-    { nome: 'Metodologia de Pesquisa em Engenharia de Software', ch: 80 },
-  ] },
-  { periodo: 2, label: '2º Ano', ch: 800, disciplinas: [
-    { nome: 'Cálculo', ch: 80 },
-    { nome: 'Empreendedorismo em Tecnologia da Informação', ch: 80 },
-    { nome: 'Algoritmos e Estruturas de Dados II', ch: 80 },
-    { nome: 'Arquitetura de Computadores', ch: 80 },
-    { nome: 'Banco de Dados II', ch: 80 },
-    { nome: 'Programação Orientada a Objetos', ch: 160 },
-    { nome: 'Práticas de Extensão', ch: 160 },
-    { nome: 'Análise e Projeto de Sistemas', ch: 80 },
-  ] },
-  { periodo: 3, label: '3º Ano', ch: 800, disciplinas: [
-    { nome: 'Probabilidade e Estatística', ch: 80 },
-    { nome: 'Desenvolvimento para Dispositivos Móveis', ch: 160 },
-    { nome: 'Programação Web', ch: 160 },
-    { nome: 'Sistemas Operacionais', ch: 80 },
-    { nome: 'Arquitetura e Padrões de Software', ch: 80 },
-    { nome: 'Construção de Software', ch: 80 },
-    { nome: 'Projeto Integrador', ch: 80 },
-    { nome: 'Interação Humano-Computador', ch: 80 },
-  ] },
-  { periodo: 4, label: '4º Ano', ch: 720, disciplinas: [
-    { nome: 'Redes de Computadores e Segurança', ch: 80 },
-    { nome: 'Tópicos em Computação', ch: 160 },
-    { nome: 'Governança e Gestão de Serviços de Software', ch: 80 },
-    { nome: 'Novas Aplicações em Engenharia de Software', ch: 80 },
-    { nome: 'Projeto de Software Avançado', ch: 160 },
-    { nome: 'Teste de Software', ch: 80 },
-    { nome: 'Trabalho de Conclusão de Curso', ch: 80 },
-  ] },
+  { categoria: 'Linguagens',        cor: 'blue',   itens: ['Python', 'JavaScript', 'TypeScript', 'Java', 'C / C++'] },
+  { categoria: 'Frontend & Mobile', cor: 'cyan',   itens: ['React', 'React Native', 'Flutter', 'HTML & CSS', 'Tailwind'] },
+  { categoria: 'Backend',           cor: 'green',  itens: ['Node.js', 'Spring Boot', 'Django', 'Laravel'] },
+  { categoria: 'Banco de Dados',    cor: 'yellow', itens: ['PostgreSQL', 'MySQL', 'MongoDB'] },
+  { categoria: 'DevOps & Cloud',    cor: 'orange', itens: ['Git & GitHub', 'Docker', 'CI/CD', 'AWS / GCP', 'Linux'] },
+  { categoria: 'IA & Dados',        cor: 'purple', itens: ['TensorFlow', 'PyTorch'] },
 ]
 
 // Componentes obrigatórios que não entram na grade por ano (Quadro 5 do PPC).
@@ -139,7 +97,7 @@ export function CursoPage() {
             { label: 'Gratuito',              sub: 'Ensino Federal' },
             { label: '3.208h',                sub: 'Carga horária total' },
             { label: 'Vespertino e Noturno',  sub: '13h30 – 22h50' },
-            { label: '40 vagas',              sub: 'Anuais, via SISU' },
+            { label: '40 vagas',              sub: 'Anuais, via Processo Seletivo' },
           ].map(({ label, sub }) => (
             <div key={label} className="rounded-2xl bg-white border border-gray-200 shadow-sm px-5 py-3 text-center">
               <p className="text-gray-900 font-bold">{label}</p>
@@ -217,8 +175,15 @@ export function CursoPage() {
           <SectionSubtitle>Nada de exercícios sem sentido. O curso te prepara para construir coisas que existem no mundo real.</SectionSubtitle>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {projetos.map(p => (
-              <div key={p.titulo} className="rounded-2xl border border-gray-200 bg-white shadow-sm p-5 space-y-3">
-                <span className="text-3xl">{p.icon}</span>
+              <div key={p.titulo} className={`rounded-2xl border shadow-sm p-5 space-y-3 ${p.real ? 'border-green-200 bg-green-50/40' : 'border-gray-200 bg-white'}`}>
+                <div className="flex items-start justify-between gap-2">
+                  <span className="text-3xl">{p.icon}</span>
+                  {p.real && (
+                    <span className="text-[10px] font-bold rounded-full bg-green-100 border border-green-300 text-green-700 px-2 py-0.5 flex-shrink-0">
+                      PROJETO REAL
+                    </span>
+                  )}
+                </div>
                 <div>
                   <h3 className="text-gray-900 font-bold text-sm">{p.titulo}</h3>
                   <p className="text-gray-500 text-xs leading-relaxed mt-1">{p.desc}</p>
@@ -229,11 +194,18 @@ export function CursoPage() {
               </div>
             ))}
           </div>
+          <p className="text-gray-400 text-xs mt-4">
+            Projetos marcados como <strong className="text-green-700">real</strong> foram desenvolvidos por alunos do
+            curso através do{' '}
+            <a href="https://codelabifpr.com.br/projetos/cards" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+              CodeLab IFPR ↗
+            </a>, laboratório de extensão do campus — veja mais projetos reais no link.
+          </p>
         </section>
 
         {/* Tecnologias */}
         <section>
-          <SectionTitle>Tecnologias que você vai dominar</SectionTitle>
+          <SectionTitle>Tecnologias que você vai estudar</SectionTitle>
           <SectionSubtitle>As mesmas ferramentas usadas por Netflix, Google, Nubank e pelas startups mais inovadoras do Brasil.</SectionSubtitle>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {tecnologias.map(t => (
@@ -320,15 +292,11 @@ export function CursoPage() {
           </div>
           <div className="mt-12 text-center border-t border-green-200 pt-10">
             <p className="text-gray-900 font-bold text-lg mb-1">Ficou interessado?</p>
-            <p className="text-gray-500 text-sm mb-6">40 vagas anuais pelo SISU (nota do ENEM). Acompanhe as datas no site do IFPR.</p>
+            <p className="text-gray-500 text-sm mb-6">40 vagas anuais via Processo Seletivo. Acompanhe as datas no site do IFPR.</p>
             <div className="flex flex-wrap justify-center gap-3">
               <a href="https://ifpr.edu.br/paranavai/" target="_blank" rel="noopener noreferrer"
                 className="rounded-xl bg-green-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-700 transition-colors shadow-sm">
                 Site do IFPR Paranavaí ↗
-              </a>
-              <a href="https://sisu.mec.gov.br" target="_blank" rel="noopener noreferrer"
-                className="rounded-xl border border-gray-300 bg-white px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors shadow-sm">
-                Informações sobre o SISU ↗
               </a>
             </div>
           </div>

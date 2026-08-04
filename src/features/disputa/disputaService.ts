@@ -163,7 +163,8 @@ export async function criarSubmission(
   playerId: string,
   mensagem: string,
   roundTitle: string,
-  roundPrompt: string
+  roundPrompt: string,
+  disciplina: string
 ): Promise<Submission | null> {
   // Grava um snapshot do tema vigente no envio — o admin pode alterar o tema
   // de uma rodada aberta a qualquer momento, e a avaliação por IA deve usar
@@ -176,6 +177,8 @@ export async function criarSubmission(
       mensagem,
       round_title: roundTitle,
       round_prompt: roundPrompt,
+      // Conferida e recompensada no servidor (evaluate-submission), não aqui.
+      disciplina,
     })
     .select()
     .single()
@@ -196,6 +199,8 @@ export interface EvalResult {
     viability:         number
     score:             number
     flagged:           boolean
+    disciplina_valida: boolean
+    disciplina_bonus:  number
   }
 }
 

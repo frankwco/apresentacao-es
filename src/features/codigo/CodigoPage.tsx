@@ -432,7 +432,7 @@ export function CodigoPage() {
                 <span className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-bold ring-1 ${corBadge[c.cor]}`}>
                   {c.badge}
                 </span>
-                <h2 className="text-2xl md:text-3xl font-extrabold text-white mt-1 leading-tight">
+                <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 mt-1 leading-tight">
                   {c.titulo}
                 </h2>
               </div>

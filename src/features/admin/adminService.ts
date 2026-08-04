@@ -64,6 +64,7 @@ export async function fecharRound(id: string): Promise<boolean> {
 export interface SubmissaoAdmin {
   id: string
   mensagem: string
+  disciplina: string | null
   nota: number | null
   feedback: string | null
   hidden: boolean
@@ -95,6 +96,7 @@ export async function getSubmissoesAdmin(
   return subs.map(s => ({
     id: s.id,
     mensagem: s.mensagem,
+    disciplina: s.disciplina,
     nota: s.nota,
     feedback: s.feedback,
     hidden: s.hidden ?? false,

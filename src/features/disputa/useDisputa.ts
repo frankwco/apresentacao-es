@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getDeviceId, getCooldownRestante, salvarCooldown } from '../../lib/deviceId'
-import { normalizarTexto, validarNome, validarEscola, validarMensagem, mensagemAmigavel } from '../../lib/validacao'
+import { normalizarTexto, validarNome, validarEscola, validarMensagem, validarDisciplina, mensagemAmigavel } from '../../lib/validacao'
 import {
   criarSubmission,
   evaluateSubmission,
@@ -129,7 +129,7 @@ export function useDisputa() {
 
   // ── enviar ────────────────────────────────────────────────────────────────
   const enviar = useCallback(
-    async (nome: string, escola: string | null, mensagem: string): Promise<boolean> => {
+    async (nome: string, escola: string | null, mensagem: string, disciplina: string): Promise<boolean> => {
       const currentRound = roundRef.current
 
       if (!currentRound) {
@@ -159,9 +159,10 @@ export function useDisputa() {
       // ── Normalização e validação dos campos ───────────────────────────────
       // normalizarTexto remove caracteres de controle e colapsa espaços
       // antes da validação de tamanho — garante consistência com o banco.
-      const nomeNorm     = normalizarTexto(nome)
-      const escolaNorm   = escola ? normalizarTexto(escola) : null
-      const mensagemNorm = normalizarTexto(mensagem)
+      const nomeNorm       = normalizarTexto(nome)
+      const escolaNorm     = escola ? normalizarTexto(escola) : null
+      const mensagemNorm   = normalizarTexto(mensagem)
+      const disciplinaNorm = normalizarTexto(disciplina)
 
       const erroNome = validarNome(nomeNorm)
       if (erroNome) { setErro(erroNome); return false }
@@ -173,6 +174,9 @@ export function useDisputa() {
 
       const erroMensagem = validarMensagem(mensagemNorm)
       if (erroMensagem) { setErro(erroMensagem); return false }
+
+      const erroDisciplina = validarDisciplina(disciplinaNorm)
+      if (erroDisciplina) { setErro(erroDisciplina); return false }
 
       setEnviando(true)
       setErro(null)
@@ -192,7 +196,7 @@ export function useDisputa() {
       // A nota será preenchida de forma assíncrona pela Edge Function.
       const submission = await criarSubmission(
         currentRound.id, player.id, mensagemNorm,
-        currentRound.title, currentRound.prompt
+        currentRound.title, currentRound.prompt, disciplinaNorm
       )
       if (!submission) {
         setErro(mensagemAmigavel('submission'))

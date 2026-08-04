@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { UltimaSubmissao } from './useDisputa'
 import { LIMITES } from '../../lib/validacao'
 
@@ -6,7 +7,7 @@ const MAX_CHARS        = LIMITES.MENSAGEM_MAX
 const COOLDOWN_SECONDS = 10
 
 interface Props {
-  onEnviar: (nome: string, escola: string | null, mensagem: string) => Promise<boolean>
+  onEnviar: (nome: string, escola: string | null, mensagem: string, disciplina: string) => Promise<boolean>
   enviando: boolean
   cooldownRestante: number
   ultimaSubmissao: UltimaSubmissao | null
@@ -18,9 +19,10 @@ interface Props {
 export function FormularioEnvio({
   onEnviar, enviando, cooldownRestante, ultimaSubmissao, erro, roundAtiva, prompt,
 }: Props) {
-  const [nome, setNome]         = useState('')
-  const [escola, setEscola]     = useState('')
-  const [mensagem, setMensagem] = useState('')
+  const [nome, setNome]             = useState('')
+  const [escola, setEscola]         = useState('')
+  const [mensagem, setMensagem]     = useState('')
+  const [disciplina, setDisciplina] = useState('')
 
   const restante   = MAX_CHARS - mensagem.length
   const emCooldown = cooldownRestante > 0
@@ -28,12 +30,13 @@ export function FormularioEnvio({
     roundAtiva && !enviando && !emCooldown &&
     nome.trim().length > 0 &&
     mensagem.trim().length > 0 &&
-    mensagem.length <= MAX_CHARS
+    mensagem.length <= MAX_CHARS &&
+    disciplina.trim().length > 0
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!podeEnviar) return
-    const ok = await onEnviar(nome.trim(), escola.trim() || null, mensagem.trim())
+    const ok = await onEnviar(nome.trim(), escola.trim() || null, mensagem.trim(), disciplina.trim())
     if (ok) setMensagem('')
   }
 
@@ -72,6 +75,17 @@ export function FormularioEnvio({
             />
           </Campo>
         </div>
+
+        <Campo
+          label="Disciplina do curso que mais te chamou atenção" required
+          hint={<>confira a <Link to="/curso" className="underline hover:text-green-700">grade curricular</Link> — acertar vale +5 pontos</>}
+        >
+          <input
+            type="text" value={disciplina} onChange={e => setDisciplina(e.target.value)}
+            placeholder="Ex: Programação Web" disabled={!roundAtiva}
+            className={inputCls}
+          />
+        </Campo>
 
         <Campo
           label="Mensagem" required
@@ -202,6 +216,18 @@ function PainelResultado({ sub }: { sub: UltimaSubmissao }) {
         )}
       </div>
 
+      {crit && crit.disciplina_bonus > 0 && (
+        <div className="px-5 py-2 bg-green-100 border-b border-green-200 flex items-center gap-1.5 text-xs font-semibold text-green-800">
+          🎓 +{crit.disciplina_bonus} pontos de bônus — disciplina correta!
+        </div>
+      )}
+      {crit && crit.disciplina_bonus === 0 && !crit.disciplina_valida && !crit.flagged && (
+        <div className="px-5 py-2 bg-amber-50 border-b border-amber-100 text-xs text-amber-700">
+          Essa disciplina não bateu com a grade curricular — confira a{' '}
+          <Link to="/curso" className="underline hover:text-amber-900">grade do curso</Link> e tente de novo.
+        </div>
+      )}
+
       {crit && (
         <div className="px-5 py-3 grid grid-cols-2 gap-x-5 gap-y-2.5 border-b border-green-100">
           {([
@@ -244,7 +270,7 @@ const inputCls =
   'disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed transition-all'
 
 function Campo({ label, hint, required, right, children }: {
-  label: string; hint?: string; required?: boolean
+  label: string; hint?: React.ReactNode; required?: boolean
   right?: React.ReactNode; children: React.ReactNode
 }) {
   return (
